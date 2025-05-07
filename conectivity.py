@@ -87,7 +87,40 @@ def dfs_(adj, visited, node):
             dfs_(adj, visited, nbor)
     print(node)
     # post order operations
+    
+def _dfs_iter(adj, no_inicial):
+    visited = set()
+    stack = [no_inicial]
+    pre = []
+    while stack:
+        no = stack.pop()
+        if no not in visited:
+            visited.add(no)
+            # pre
+            pre.append(no)
+            for nbor in reversed(adj[no]):
+                if nbor not in visited:
+                    stack.append(nbor)
+    return pre
+ 
+def dfs_iter_(adj, no_inicial):
+    visited = set()
+    stack = [(no_inicial, False)]
+    post = []
 
+    while stack:
+        no, processed = stack.pop()
+        if processed:
+            post.append(no)  # pós-ordem
+        elif no not in visited:
+            visited.add(no)
+            stack.append((no, True))  # Marcar para pós-ordem depois
+            for nbor in reversed(adj[no]):
+                if nbor not in visited:
+                    stack.append((nbor, False))
+    
+    return post
+        
 def create_visited(nodes):
     visited = {}
     for no in nodes:
@@ -104,15 +137,15 @@ print("\n")
 visited = create_visited(g.nodes)
 dfs_(g.adj, visited, "s")
 
+print(_dfs_iter(g.adj, "s"))
+print("\n")
+print(dfs_iter_(g.adj, "s"))
+
 # quais partes do grafo são alcançáveis apartir de um nó específico?
 
 # DFS + lista alcançaveis
 visited = create_visited(g.nodes)
-def reach_dfs(adj, node, visited):
-    visited[node] = True
-    for nbor in adj[node]:
-        reach_dfs(adj, node, visited)
-        
+
     
 
 
