@@ -54,6 +54,17 @@ def quicksort(v, l=0, r=None, compare=lambda x,y : x<y):  # inplace
     quicksort(v, l, pidx-1, compare)
     quicksort(v, pidx+1, r, compare)
 
+def quicksort_iter(v, l=0, r=None, compare=lambda x,y : x<y):
+  if r == None:
+    r = len(v)-1
+  stack = [(l,r)]
+  while stack:
+    l,r = stack.pop()
+    if l < r:
+      pidx = partition(v, l, r, compare)
+      stack.append((l,pidx-1))
+      stack.append((pidx+1,r))
+
 def merge_iter(v, l1, r1, l2, r2, compare):
   out = []
   i, j = l1, l2
