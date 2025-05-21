@@ -62,7 +62,7 @@ class G:
        self.adj = adj_list(nodes,edges)
 
 g = G(nodes, edges)
-print(g.adj)
+#print(g.adj)
 
 # CONEXO:
 # existe um caminho entre todo par de nós
@@ -70,83 +70,57 @@ print(g.adj)
 # FORTEMENTE CONEXO (direcionados):
 # existe todo caminho (u,v) e todo caminho (v,u)
 
-def _dfs(adj, visited, node):
-    visited[node] = True
-    # pre order operations
-    print(node)
-    for nbor in adj[node]:
-        if not visited[nbor]:
-            _dfs(adj, visited, nbor)
-    # post order operations
+def dfs(adj, visited, node, pre=[],post=[]):
+    visited.add(node)
+    pre.append(node)
     
-def dfs_(adj, visited, node):
-    visited[node] = True
-    # pre order operations
     for nbor in adj[node]:
-        if not visited[nbor]:
-            dfs_(adj, visited, nbor)
-    print(node)
-    # post order operations
+        if nbor not in visited:
+            dfs(adj, visited, nbor, pre, post)
+    post.append(node)
+    return pre, post
     
-def _dfs_iter(adj, no_inicial):
-    visited = set()
-    stack = [no_inicial]
-    pre = []
-    while stack:
-        no = stack.pop()
-        if no not in visited:
-            visited.add(no)
-            # pre
-            pre.append(no)
-            for nbor in reversed(adj[no]):
-                if nbor not in visited:
-                    stack.append(nbor)
-    return pre
- 
-def dfs_iter_(adj, no_inicial):
+def dfs_iter(adj, no_inicial):
     visited = set()
     stack = [(no_inicial, False)]
+    pre = []
     post = []
+    pre_n = {}
+    post_n = {}
+    i=-1
+    j=-1
 
     while stack:
-        no, processed = stack.pop()
-        if processed:
-            post.append(no)  # pós-ordem
+        no, explored = stack.pop()
+        if explored:
+            j+=1
+            post.append(no)
+            post_n[no] = j
         elif no not in visited:
+            i+=1
             visited.add(no)
-            stack.append((no, True))  # Marcar para pós-ordem depois
+            pre.append(no)
+            pre_n[no] = i
+            stack.append((no, True))  # pós-visita (pós-ordem)
             for nbor in reversed(adj[no]):
-                if nbor not in visited:
-                    stack.append((nbor, False))
-    
-    return post
-        
-def create_visited(nodes):
-    visited = {}
-    for no in nodes:
-        visited[no] = False
-    return visited
+                if nbor not in visited:   
+                    stack.append((nbor, False))  # pré-visita
+    return pre, post, pre_n, post_n
     
 # bsca por profundidade em grafos não direcionados
 
 # TEMPO LINEAR!
 
-visited = create_visited(g.nodes)
-_dfs(g.adj, visited, "s")
-print("\n")
-visited = create_visited(g.nodes)
-dfs_(g.adj, visited, "s")
-
-print(_dfs_iter(g.adj, "s"))
-print("\n")
-print(dfs_iter_(g.adj, "s"))
+pre, post, pre_n, post_n = dfs_iter(g.adj, "s")
+print(pre)
+print(post)
+print(pre_n)
+print(post_n)
 
 # quais partes do grafo são alcançáveis apartir de um nó específico?
 
-# DFS + lista alcançaveis
-visited = create_visited(g.nodes)
-
-    
+# DFS + lista alcançaveis 
+        
 
 
 
